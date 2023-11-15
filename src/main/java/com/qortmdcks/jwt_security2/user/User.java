@@ -1,17 +1,16 @@
 package com.qortmdcks.jwt_security2.user;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 @Data  // Lombok: 게터, 세터, toString, equals, hashCode 자동 생성
 @Builder  // Lombok: 빌더 패턴 구현
@@ -29,15 +28,23 @@ public class User implements UserDetails {
     private String password;  // 사용자 비밀번호
 
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;  // 사용자의 권한을 반환 (현재 구현되지 않음)
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+    @Override
+    public String getUsername() {
+        return email;  // 사용자의 이름을 반환 (현재 구현되지 않음)
     }
 
     @Override
-    public String getUsername() {
-        return null;  // 사용자의 이름을 반환 (현재 구현되지 않음)
+    public String getPassword(){
+        return password;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {
