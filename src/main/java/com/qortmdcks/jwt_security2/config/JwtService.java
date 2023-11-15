@@ -46,6 +46,11 @@ public class JwtService {
             Map<String, Object> extractClaims,
             UserDetails userDetails
     ){
+        return buildToken(new HashMap<>(), userDetails, jwtExpiration);
+    }
+    public String genererateRefreshToken(
+            UserDetails userDetails
+    ){
         return buildToken(new HashMap<>(), userDetails, refreshExpiration);
     }
 

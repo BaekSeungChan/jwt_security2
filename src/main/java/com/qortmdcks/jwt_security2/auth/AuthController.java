@@ -15,7 +15,7 @@ public class AuthController {
     private final AuthService authService;  // AuthService 주입
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> signupUser(@Valid @RequestBody RegisterRequest request){
+    public ResponseEntity<?> signupUser(@Valid @RequestBody RegisterRequest request){
         return ResponseEntity.ok(authService.register(request));
     }
     // 회원가입 요청을 처리하는 메소드. 유효한 RegisterRequest 객체를 받아 회원가입 로직 수행
