@@ -65,6 +65,22 @@ public class JwtService {
                 .compact();
     }
 
+    // JWT 토큰의 유효성 검사 (사용자 정보 일치 여부 확인)
+    public boolean isTokenValid(String token, UserDetails userDetails){
+        final String userName = extractUsername(token);
+        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    // JWT 토큰의 만료 여부 확인
+    private boolean isTokenExpired(String token){
+        return extractExpiration(token).before(new Date());
+    }
+
+    // JWT 토큰에서 만료 시간 추출
+    private Date extractExpiration(String token){
+        return extractClaim(token, Claims::getExpiration);
+    }
+
     // JWT 토큰에서 모든 클레임 추출
     public Claims extractAllClaims(String token){
         return Jwts
