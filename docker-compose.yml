@@ -1,0 +1,42 @@
+services:
+  # PostgreSQL 데이터베이스 서비스 설정
+  postgres:
+    container_name: postgres-sql2  # 컨테이너 이름
+    image: postgres  # 사용할 이미지 (PostgreSQL)
+    environment:
+      POSTGRES_USER: postgres  # PostgreSQL 사용자 이름
+      POSTGRES_PASSWORD: password  # PostgreSQL 사용자 비밀번호
+      PGDATA: /data/postgres  # PostgreSQL 데이터 저장 위치
+    volumes:
+      - postgres:/data/postgres  # 볼륨 마운트 (데이터 보존)
+    ports:
+      - "5432:5432"  # 포트 매핑 (호스트:컨테이너)
+    networks:
+      - postgres  # 네트워크 설정
+    restart: unless-stopped  # 컨테이너 재시작 정책
+
+  # PgAdmin 서비스 설정
+  pgadmin:
+    container_name: pgadmin2  # 컨테이너 이름
+    image: dpage/pgadmin4  # 사용할 이미지 (PgAdmin)
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}  # 기본 이메일 (환경 변수 또는 기본값)
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}  # 기본 비밀번호 (환경 변수 또는 기본값)
+      PGADMIN_CONFIG_SERVER_MODE: 'False'  # 서버 모드 설정
+    volumes:
+      - pgadmin:/var/lib/pgadmin  # 볼륨 마운트 (설정 및 세션 데이터 보존)
+    ports:
+      - "5050:80"  # 포트 매핑 (호스트:컨테이너)
+    networks:
+      - postgres  # 네트워크 설정
+    restart: unless-stopped  # 컨테이너 재시작 정책
+
+# 네트워크 정의
+networks:
+  postgres:
+    driver: bridge  # 브리지 드라이버 사용
+
+# 볼륨 정의
+volumes:
+  postgres:  # PostgreSQL 데이터 저장을 위한 볼륨
+  pgadmin:   # PgAdmin 설정 및 세션 데이터를 위한 볼륨
